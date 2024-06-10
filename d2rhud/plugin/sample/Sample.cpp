@@ -25,7 +25,7 @@ void Sample::OnDraw() {
     DWORD dataSize = sizeof(val);
     if (ERROR_SUCCESS == RegGetValueA(HKEY_CURRENT_USER, "Software\\Blizzard Entertainment\\Battle.net\\Launch Options\\BNA", "CONNECTION_STRING_CN", RRF_RT_ANY, nullptr, &val, &dataSize))
     {
-        if (strcmp((char*)val, "127.0.0.1") == 0) //Only execute code if BNET access has been successfully localized
+        if (strcmp((char*)val, "127.0.0.1") == 0) //Only execute code if BNET access has been successfully localized by D2RLaunch
         {
             //Adjust resistance and HP positioning based on screen resolution
             auto drawList = ImGui::GetBackgroundDrawList();
@@ -106,7 +106,8 @@ void Sample::OnDraw() {
                             drawList->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), hp.c_str());
                             
                             
-                            /* Draw Examples
+                            /* Debug Examples */
+                            /*
                             std::string unitId = std::format("Unit ID: {}", gMouseHover->HoveredUnitId);
                             drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), unitId.c_str());
                             std::string monLevel = std::format("Level: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_LEVEL, 0));
@@ -123,7 +124,6 @@ void Sample::OnDraw() {
                             drawList->AddText({ 20, 150 }, IM_COL32(170, 50, 50, 255), experience.c_str());
                             std::string magicfind = std::format("Base MF: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ITEM_MAGICBONUS, 0));
                             drawList->AddText({ 20, 170 }, IM_COL32(170, 50, 50, 255), magicfind.c_str());
-
                             std::string coldimmunity = std::format("Curse Resistance: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_CURSE_RESISTANCE, 0));
                             drawList->AddText({ 20, 190 }, IM_COL32(170, 50, 50, 255), coldimmunity.c_str()); 
                             */

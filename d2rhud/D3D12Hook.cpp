@@ -175,12 +175,13 @@ namespace D3D12 {
 			pD3DDevice->Release();
 
 
+			//Add Default D2R font to drawtable
 			namespace fs = std::filesystem;
 			std::string fontPath = "Exocet.otf";
 
 			if (fs::exists(fontPath)) {
 				std::cout << "Adding fonts from file..." << std::endl;
-				io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 12.0f);
+				io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 12.0f); //Add multiple font sizes
 				io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 15.0f);
 				io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 18.0f);
 				io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 24.0f);
