@@ -53,7 +53,7 @@ void Sample::OnDraw() {
 
     //Retreive UNIT info using PTR functions (D2Ptrs.h)
     D2UnitStrc* pUnit = UNITS_GetClientUnitByIdAndType(gMouseHover->HoveredUnitId, gMouseHover->HoveredUnitType);
-    D2UnitStrc* pUnit2 = UNITS_GetClientUnitByIdAndType(1, UNIT_PLAYER);
+    D2UnitStrc* pUnitPlayer = UNITS_GetClientUnitByIdAndType(1, UNIT_PLAYER);
     D2UnitStrc* pUnitServer = UNITS_GetServerUnitByTypeAndId(pGame, gMouseHover->HoveredUnitType, gMouseHover->HoveredUnitId);
 
     //Check if HP is greater than 0 (avoid displaying NPC stats)
@@ -96,13 +96,15 @@ void Sample::OnDraw() {
                         STATLIST_GetUnitStatSigned(pUnitServer, STAT_MAXHP, 0) >> 8);
                     auto width = ImGui::CalcTextSize(hp.c_str()).x;
                     drawList->AddText({ center - (width / 2.0f) + 1, ypercent2 }, IM_COL32(255, 255, 255, 255), hp.c_str());
-                    drawList->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), hp.c_str());
 
 
-                    /* Debug Examples */
+                    /* Debug Examples - Retrieves stat references from D2Enums.h */
+
                     /*
+                    std::string playerStrength = std::format("Player Strength: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_STRENGTH, 0));
+                    drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), playerStrength.c_str());
                     std::string unitId = std::format("Unit ID: {}", gMouseHover->HoveredUnitId);
-                    drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), unitId.c_str());
+                    drawList->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), unitId.c_str());
                     std::string monLevel = std::format("Level: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_LEVEL, 0));
                     drawList->AddText({ 20, 50 }, IM_COL32(170, 50, 50, 255), monLevel.c_str());
                     std::string minDmg = std::format("Min DMG: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_MINDAMAGE, 0));
