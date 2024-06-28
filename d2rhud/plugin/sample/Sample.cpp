@@ -22,7 +22,7 @@ constexpr uint32_t Experience = { 21 };
 
 void Sample::OnDraw() {
 
-    /*
+    /* Item Description Example:
     {
         for (int i = 1; i < 256; i++) {
             D2UnitStrc* pItem = UNITS_GetClientUnitByIdAndType(i, UNIT_ITEM);
@@ -89,9 +89,6 @@ void Sample::OnDraw() {
             std::string resistances[6];
             float widths[6];
 
-            
-
-
             for (int i = 0; i < 6; i++) {
                 int resistanceValue = STATLIST_GetUnitStatSigned(pUnit, ResistanceStats[i], 0);
                 resistances[i] = std::format("{}", resistanceValue);
@@ -128,11 +125,11 @@ void Sample::OnDraw() {
 
                     /* Debug Examples - Retrieves stat references from D2Enums.h */
 
-                    
-                    //std::string playerStrength = std::format("Player Strength: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_STRENGTH, 0));
-                    //drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), playerStrength.c_str());
-                    //std::string unitId = std::format("Unit ID: {}", gMouseHover->HoveredUnitId);
-                    //drawList->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), unitId.c_str());
+                    /*
+                    std::string playerStrength = std::format("Player Strength: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_STRENGTH, 0));
+                    drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), playerStrength.c_str());
+                    std::string unitId = std::format("Unit ID: {}", gMouseHover->HoveredUnitId);
+                    drawList->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), unitId.c_str());
                     std::string coldMin = std::format("Cold Min: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_COLDMINDAM, 0));
                     drawList->AddText({ 20, 50 }, IM_COL32(170, 50, 50, 255), coldMin.c_str());
                     std::string coldMax = std::format("Cold Max: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_COLDMAXDAM, 0));
@@ -141,17 +138,17 @@ void Sample::OnDraw() {
                     drawList->AddText({ 20, 90 }, IM_COL32(170, 50, 50, 255), minDmg.c_str());
                     std::string maxDmg = std::format("Phys Max: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_MAXDAMAGE, 0));
                     drawList->AddText({ 20, 110 }, IM_COL32(170, 50, 50, 255), maxDmg.c_str());
-                    //std::string attackRating = std::format("AR: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_TOHIT, 0));
-                    //drawList->AddText({ 20, 110 }, IM_COL32(170, 50, 50, 255), attackRating.c_str());
-                    //std::string defense = std::format("Def: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ARMORCLASS, 0));
-                    //drawList->AddText({ 20, 130 }, IM_COL32(170, 50, 50, 255), defense.c_str());
-                    //std::string experience = std::format("Base XP: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_EXPERIENCE, 0));
-                    //drawList->AddText({ 20, 150 }, IM_COL32(170, 50, 50, 255), experience.c_str());
-                    //std::string magicfind = std::format("Base MF: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ITEM_MAGICBONUS, 0));
-                    //drawList->AddText({ 20, 170 }, IM_COL32(170, 50, 50, 255), magicfind.c_str());
-                    //std::string coldimmunity = std::format("Curse Resistance: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_CURSE_RESISTANCE, 0));
-                    //drawList->AddText({ 20, 190 }, IM_COL32(170, 50, 50, 255), coldimmunity.c_str());
-                    
+                    std::string attackRating = std::format("AR: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_TOHIT, 0));
+                    drawList->AddText({ 20, 110 }, IM_COL32(170, 50, 50, 255), attackRating.c_str());
+                    std::string defense = std::format("Def: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ARMORCLASS, 0));
+                    drawList->AddText({ 20, 130 }, IM_COL32(170, 50, 50, 255), defense.c_str());
+                    std::string experience = std::format("Base XP: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_EXPERIENCE, 0));
+                    drawList->AddText({ 20, 150 }, IM_COL32(170, 50, 50, 255), experience.c_str());
+                    std::string magicfind = std::format("Base MF: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ITEM_MAGICBONUS, 0));
+                    drawList->AddText({ 20, 170 }, IM_COL32(170, 50, 50, 255), magicfind.c_str());
+                    std::string coldimmunity = std::format("Curse Resistance: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_CURSE_RESISTANCE, 0));
+                    drawList->AddText({ 20, 190 }, IM_COL32(170, 50, 50, 255), coldimmunity.c_str());
+                    */
                 }
             }
         }
