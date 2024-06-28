@@ -14,16 +14,9 @@ std::wstring ExePath();
 void EjectDLL(const int& pid, const std::wstring& path);
 void InjectDLL(const int& pid, const std::wstring& path);
 
-//we copy/rename the dll because the game might be holding onto the file if it
-//is already injected
 #define ORIGINAL_DLL_NAME L"d2rhud.dll"
-#define RENAMED_DLL_NAME  L"overlay.dll"
+#define RENAMED_DLL_NAME  L"d2rhudb.dll"
 
-/*
-* Simple basic injector as a proof of concept. May or may not work on your game. Launch using 
-* ./d2rhud-injector.exe "MyGame.exe" or if running from Visual Studio's add
-* the process executable name as a Debug > Command Argument
-*/
 int main(int argc, char* argv[])
 {
 	if (argc != 2) {
@@ -157,19 +150,6 @@ void InjectDLL(const int& pid, const std::wstring& path) {
 	}
 	WaitForSingleObject(hThread, INFINITE);
 
-	//VirtualFreeEx(hProc, lpAlloc, 0, MEM_RELEASE);
-	//FreeLibrary(hKernel32);
 	CloseHandle(hProc);
 	CloseHandle(hThread);
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

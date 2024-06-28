@@ -2,6 +2,8 @@
 #include <imgui.h>
 #include "../../D2/D2Ptrs.h"
 #include <sstream>
+#include <windows.h>
+#include <vector>
 
 const char* ResistanceNames[6] = { "   ", "   ", "   ", "   ", "   ", "   " };
 constexpr  uint32_t ResistanceStats[6] = { 39, 41, 43, 45, 36, 37 };
@@ -19,6 +21,26 @@ constexpr  const char* Seperator = "  ";
 constexpr uint32_t Experience = { 21 };
 
 void Sample::OnDraw() {
+
+    /*
+    {
+        for (int i = 1; i < 256; i++) {
+            D2UnitStrc* pItem = UNITS_GetClientUnitByIdAndType(i, UNIT_ITEM);
+            if (!pItem) {
+                break;
+            }
+            char* pName = new char[256];
+            ITEMS_GetName(pItem, pName);
+            std::cout << pName << std::endl;
+
+            std::vector<char> buffer(0x800, 0);
+            ITEMS_Description(pItem, buffer.data(), buffer.size(), 1, 1, 172, 0x40u, 1);
+            std::string itemDescStr = std::format("Item Desc: {}", buffer.data());
+            std::cout << itemDescStr << std::endl;
+            ImGui::GetBackgroundDrawList()->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), itemDescStr.c_str());
+        }
+    }
+    */
 
     //Adjust resistance and HP positioning based on screen resolution
     auto drawList = ImGui::GetBackgroundDrawList();
@@ -56,6 +78,7 @@ void Sample::OnDraw() {
     D2UnitStrc* pUnitPlayer = UNITS_GetClientUnitByIdAndType(1, UNIT_PLAYER);
     D2UnitStrc* pUnitServer = UNITS_GetServerUnitByTypeAndId(pGame, gMouseHover->HoveredUnitType, gMouseHover->HoveredUnitId);
 
+
     //Check if HP is greater than 0 (avoid displaying NPC stats)
     if (STATLIST_GetUnitStatSigned(pUnitServer, STAT_HITPOINTS, 0) != 0)
     {
@@ -65,6 +88,9 @@ void Sample::OnDraw() {
             float spaceWidth = ImGui::CalcTextSize(Seperator).x;
             std::string resistances[6];
             float widths[6];
+
+            
+
 
             for (int i = 0; i < 6; i++) {
                 int resistanceValue = STATLIST_GetUnitStatSigned(pUnit, ResistanceStats[i], 0);
@@ -98,30 +124,34 @@ void Sample::OnDraw() {
                     drawList->AddText({ center - (width / 2.0f) + 1, ypercent2 }, IM_COL32(255, 255, 255, 255), hp.c_str());
 
 
+                    
+
                     /* Debug Examples - Retrieves stat references from D2Enums.h */
 
-                    /*
-                    std::string playerStrength = std::format("Player Strength: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_STRENGTH, 0));
-                    drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), playerStrength.c_str());
-                    std::string unitId = std::format("Unit ID: {}", gMouseHover->HoveredUnitId);
-                    drawList->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), unitId.c_str());
-                    std::string monLevel = std::format("Level: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_LEVEL, 0));
-                    drawList->AddText({ 20, 50 }, IM_COL32(170, 50, 50, 255), monLevel.c_str());
-                    std::string minDmg = std::format("Min DMG: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_MINDAMAGE, 0));
-                    drawList->AddText({ 20, 70 }, IM_COL32(170, 50, 50, 255), minDmg.c_str());
-                    std::string maxDmg = std::format("Max DMG: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_MAXDAMAGE, 0));
-                    drawList->AddText({ 20, 90 }, IM_COL32(170, 50, 50, 255), maxDmg.c_str());
-                    std::string attackRating = std::format("AR: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_TOHIT, 0));
-                    drawList->AddText({ 20, 110 }, IM_COL32(170, 50, 50, 255), attackRating.c_str());
-                    std::string defense = std::format("Def: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ARMORCLASS, 0));
-                    drawList->AddText({ 20, 130 }, IM_COL32(170, 50, 50, 255), defense.c_str());
-                    std::string experience = std::format("Base XP: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_EXPERIENCE, 0));
-                    drawList->AddText({ 20, 150 }, IM_COL32(170, 50, 50, 255), experience.c_str());
-                    std::string magicfind = std::format("Base MF: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ITEM_MAGICBONUS, 0));
-                    drawList->AddText({ 20, 170 }, IM_COL32(170, 50, 50, 255), magicfind.c_str());
-                    std::string coldimmunity = std::format("Curse Resistance: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_CURSE_RESISTANCE, 0));
-                    drawList->AddText({ 20, 190 }, IM_COL32(170, 50, 50, 255), coldimmunity.c_str());
-                    */
+                    
+                    //std::string playerStrength = std::format("Player Strength: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_STRENGTH, 0));
+                    //drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), playerStrength.c_str());
+                    //std::string unitId = std::format("Unit ID: {}", gMouseHover->HoveredUnitId);
+                    //drawList->AddText({ 20, 30 }, IM_COL32(170, 50, 50, 255), unitId.c_str());
+                    std::string coldMin = std::format("Cold Min: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_COLDMINDAM, 0));
+                    drawList->AddText({ 20, 50 }, IM_COL32(170, 50, 50, 255), coldMin.c_str());
+                    std::string coldMax = std::format("Cold Max: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_COLDMAXDAM, 0));
+                    drawList->AddText({ 20, 70 }, IM_COL32(170, 50, 50, 255), coldMax.c_str());
+                    std::string minDmg = std::format("Phys Min: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_MINDAMAGE, 0));
+                    drawList->AddText({ 20, 90 }, IM_COL32(170, 50, 50, 255), minDmg.c_str());
+                    std::string maxDmg = std::format("Phys Max: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_MAXDAMAGE, 0));
+                    drawList->AddText({ 20, 110 }, IM_COL32(170, 50, 50, 255), maxDmg.c_str());
+                    //std::string attackRating = std::format("AR: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_TOHIT, 0));
+                    //drawList->AddText({ 20, 110 }, IM_COL32(170, 50, 50, 255), attackRating.c_str());
+                    //std::string defense = std::format("Def: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ARMORCLASS, 0));
+                    //drawList->AddText({ 20, 130 }, IM_COL32(170, 50, 50, 255), defense.c_str());
+                    //std::string experience = std::format("Base XP: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_EXPERIENCE, 0));
+                    //drawList->AddText({ 20, 150 }, IM_COL32(170, 50, 50, 255), experience.c_str());
+                    //std::string magicfind = std::format("Base MF: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_ITEM_MAGICBONUS, 0));
+                    //drawList->AddText({ 20, 170 }, IM_COL32(170, 50, 50, 255), magicfind.c_str());
+                    //std::string coldimmunity = std::format("Curse Resistance: {}", STATLIST_GetUnitStatSigned(pUnitServer, STAT_CURSE_RESISTANCE, 0));
+                    //drawList->AddText({ 20, 190 }, IM_COL32(170, 50, 50, 255), coldimmunity.c_str());
+                    
                 }
             }
         }
