@@ -11,11 +11,13 @@
 
 bool AutoSort::OnKeyPressed(short key)
 {
-    std::string filename = "./Keybind_Config.txt";
+    std::string filename = "./D2RHUD_Config.txt";
     std::string searchString = "Sort Stash: ";
     std::string searchStringB = "Sort Inventory: ";
+    std::string searchStringC = "Sort Cube: ";
     std::string result = readTextFollowingString(filename, searchString);
     std::string resultB = readTextFollowingString(filename, searchStringB);
+    std::string resultC = readTextFollowingString(filename, searchStringC);
 
     //Sort Stash
     if (!result.empty()) {
@@ -37,6 +39,18 @@ bool AutoSort::OnKeyPressed(short key)
         auto it = keyMap.find(resultB);
         if (it != keyMap.end() && key == it->second) {
             INVENTORY_AutoSort(1, INVPAGE_INVENTORY);
+            return true;
+        }
+    }
+
+    //Sort Cube
+    if (!resultC.empty()) {
+        resultC.erase(resultC.find_last_not_of(" \n\r\t") + 1);
+        resultC.erase(0, resultC.find_first_not_of(" \n\r\t"));
+
+        auto it = keyMap.find(resultC);
+        if (it != keyMap.end() && key == it->second) {
+            INVENTORY_AutoSort(1, INVPAGE_CUBE);
             return true;
         }
     }

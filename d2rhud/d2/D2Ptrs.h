@@ -13,6 +13,7 @@ FUNC_DEF(void, __fastcall, ITEMS_Description, (D2UnitStrc* pItem, char* pBuffer,
 
 FUNC_DEF(__int64, __fastcall, INVENTORY_AutoSort, (uint32_t pUnitID, D2C_ItemInvPage page));
 FUNC_DEF(void, __fastcall, D2CLIENT_Transmute, ());
+FUNC_DEF(void, __fastcall, D2CLIENT_SaveCharacter, ());
 FUNC_DEF(void, __fastcall, CLIENT_RevealAutoMapRoom, ());
 
 VAR_DEF(D2MouseHoverStruct, gMouseHover);
@@ -35,5 +36,6 @@ namespace D2Ptrs {
 
         VAR_PATTERNREF(gMouseHover, NULL, "48 8D 3D ? ? ? ? BB ? ? ? ? 48 8B CF E8 ? ? ? ? 48 83 C7 10 ", 3);
         VAR_PATTERNREF(gCurrentSinglePlayerGame, NULL, "48 89 05 ? ? ? ? 48 85 C0 0F 84 ? ? ? ? 44 8B C7 ", 3);
+        FUNC_PATTERNREF(D2CLIENT_SaveCharacter, NULL, "e8 13 19 1b 01", 1);
     }
 };

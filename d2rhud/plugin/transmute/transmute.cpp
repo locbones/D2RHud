@@ -11,7 +11,7 @@
 
 bool Transmute::OnKeyPressed(short key)
 {
-    std::string filename = "Keybind_Config.txt";
+    std::string filename = "D2RHUD_Config.txt";
     std::string searchString = "Transmute: ";
     std::string result = readTextFollowingString(filename, searchString);
 
