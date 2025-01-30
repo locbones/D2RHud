@@ -193,7 +193,7 @@ std::unordered_map<std::string, short> keyMap = {
     { "VK_7", 0x37 },
     { "VK_8", 0x38 },
     { "VK_9", 0x39 },
-    {"VK_A", 0x41},
+    { "VK_A", 0x41 },
     { "VK_B", 0x42 },
     { "VK_C", 0x43 },
     { "VK_D", 0x44 },
