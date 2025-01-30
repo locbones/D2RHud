@@ -1,33 +1,15 @@
 #include "PluginManager.h"
-#include "sample/Sample.h"
-#include "autosort/autosort.h"
-#include "transmute/transmute.h"
+#include "D2RHUD/D2RHUD.h"
 #include <imgui.h>
 
 PluginManager::PluginManager() {
-    m_Plugins.push_back(new Sample());
-    m_Plugins.push_back(new AutoSort());
-    m_Plugins.push_back(new Transmute());
+    m_Plugins.push_back(new D2RHUD());
 }
 
 void PluginManager::Present() {
 	for (auto& plugin : m_Plugins) {
 		plugin->OnDraw();
 	}
-
-
-
-	//simple menu
-	/*
-	if (m_ShowSettings) {
-		ImGui::SetNextWindowPos({ 0.f, 0.f }, ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize({ 500.f, 300.f }, ImGuiCond_FirstUseEver);
-		if (ImGui::Begin("Settings", &m_ShowSettings)) {
-			ImGui::Text("Hello World");
-		}
-		ImGui::End();
-	}
-	*/
 }
 
 //plugin/PluginManager.cpp
