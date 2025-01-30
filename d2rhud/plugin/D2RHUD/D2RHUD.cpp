@@ -8,7 +8,7 @@
 #include "../KeyMappings.h"
 #include <string>
 
-const char* Version = "1.0.1";
+const char* Version = "1.0.2";
 const char* ResistanceNames[6] = { "   ", "   ", "   ", "   ", "   ", "   " };
 constexpr  uint32_t ResistanceStats[6] = { 39, 41, 43, 45, 36, 37 };
 constexpr  uint32_t Alignment = { 172 };
@@ -26,13 +26,16 @@ constexpr uint32_t Experience = { 21 };
 
 //Draw monster stats based on resolution and hover settings
 void D2RHUD::OnDraw() {
+
+    //Adjust resistance and HP positioning based on screen resolution
     auto drawList = ImGui::GetBackgroundDrawList();
     auto min = drawList->GetClipRectMin();
     auto max = drawList->GetClipRectMax();
     float center = (max.x - min.x) / 2.f;
 
-    //Change font size based on resolution
     ImGuiIO& io = ImGui::GetIO();
+    float ypercent1 = io.DisplaySize.y * 0.0745f;
+    float ypercent2 = io.DisplaySize.y * 0.043f;
     int fontIndex = (io.DisplaySize.y <= 720) ? 0 : (io.DisplaySize.y <= 900) ? 1 : (io.DisplaySize.y <= 1080) ? 2 : (io.DisplaySize.y <= 1440) ? 3 : 4;
     ImGui::PushFont(io.Fonts->Fonts[fontIndex]);
 
@@ -40,18 +43,17 @@ void D2RHUD::OnDraw() {
     if (!gMouseHover->IsHovered || gMouseHover->HoveredUnitType > 0x1) {
         return;
     }
-
-    //D2 Pointers to data values
+    //Retreive UNIT info using PTR functions (D2Ptrs.h)
     D2GameStrc* pGame = *gCurrentSinglePlayerGame;
     D2UnitStrc* pUnit = UNITS_GetClientUnitByIdAndType(gMouseHover->HoveredUnitId, gMouseHover->HoveredUnitType);
     D2UnitStrc* pUnitServer = UNITS_GetServerUnitByTypeAndId(pGame, gMouseHover->HoveredUnitType, gMouseHover->HoveredUnitId);
 
-    //Only display values if unit returns a valid HP value
+    //Check if HP is greater than 0 (avoid displaying NPC stats)
     if (!pUnit || !pUnitServer || STATLIST_GetUnitStatSigned(pUnitServer, STAT_HITPOINTS, 0) == 0) {
         return;
     }
 
-    //Calculate resistances display
+    // Calculate resistances display
     float totalWidth = 0.f;
     float spaceWidth = ImGui::CalcTextSize(Seperator).x;
     std::string resistances[6];
@@ -67,7 +69,7 @@ void D2RHUD::OnDraw() {
     //Add stats to draw list with adjusted width values
     float startX = center - (totalWidth / 2.f);
     for (int i = 0; i < 6; i++) {
-        drawList->AddText({ startX, ResistanceLocationY }, ResistanceColors[i], resistances[i].c_str());
+        drawList->AddText({ startX, ypercent1 }, ResistanceColors[i], resistances[i].c_str());
         startX += widths[i] + spaceWidth;
     }
 
@@ -76,7 +78,7 @@ void D2RHUD::OnDraw() {
     int maxHP = STATLIST_GetUnitStatSigned(pUnitServer, STAT_MAXHP, 0) >> 8;
     std::string hpText = std::to_string(currentHP) + " / " + std::to_string(maxHP);
     float hpWidth = ImGui::CalcTextSize(hpText.c_str()).x;
-    drawList->AddText({ center - (hpWidth / 2.f), HPLocationY }, IM_COL32(255, 255, 255, 255), hpText.c_str());
+    drawList->AddText({ center - (hpWidth / 2.f), ypercent2 }, IM_COL32(255, 255, 255, 255), hpText.c_str());
 
     /* Debug Example - Retrieves stat references from D2Enums.h, Remove the // at start of line to use */
     //std::string playerStrength = std::format("Player Strength: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_ITEM_MAGICARROW, 0));
