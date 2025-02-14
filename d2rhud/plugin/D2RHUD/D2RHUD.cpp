@@ -8,7 +8,7 @@
 #include "../KeyMappings.h"
 #include <string>
 
-const char* Version = "1.0.2";
+const char* Version = "1.0.3";
 const char* ResistanceNames[6] = { "   ", "   ", "   ", "   ", "   ", "   " };
 constexpr  uint32_t ResistanceStats[6] = { 39, 41, 43, 45, 36, 37 };
 constexpr  uint32_t Alignment = { 172 };
@@ -23,6 +23,38 @@ constexpr  float HPLocationY = 2.f;
 constexpr  float ResistanceLocationY = 80.f;
 constexpr  const char* Seperator = "  ";
 constexpr uint32_t Experience = { 21 };
+
+int parseMonsterStats(const std::string& filename) {
+    static int cachedValue = -1;
+    static bool isCached = false;
+
+    if (isCached) {
+        return cachedValue;
+    }
+
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        return -1;
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+        size_t pos = line.find("Monster Stats:");
+        if (pos != std::string::npos) {
+            try {
+                cachedValue = std::stoi(line.substr(pos + 14));
+                isCached = true;
+                return cachedValue;
+            }
+            catch (...) {
+                return -1;
+            }
+        }
+    }
+    return -1;
+}
+
+int displayEnabled = parseMonsterStats("D2RHUD_Config.txt");
 
 //Draw monster stats based on resolution and hover settings
 void D2RHUD::OnDraw() {
@@ -39,8 +71,8 @@ void D2RHUD::OnDraw() {
     int fontIndex = (io.DisplaySize.y <= 720) ? 0 : (io.DisplaySize.y <= 900) ? 1 : (io.DisplaySize.y <= 1080) ? 2 : (io.DisplaySize.y <= 1440) ? 3 : 4;
     ImGui::PushFont(io.Fonts->Fonts[fontIndex]);
 
-    // Ensure hover conditions are met
-    if (!gMouseHover->IsHovered || gMouseHover->HoveredUnitType > 0x1) {
+    // Ensure hover conditions are met and display is enabled
+    if (!gMouseHover->IsHovered || gMouseHover->HoveredUnitType > 0x1 || displayEnabled == 0) {
         return;
     }
     //Retreive UNIT info using PTR functions (D2Ptrs.h)
@@ -81,8 +113,8 @@ void D2RHUD::OnDraw() {
     drawList->AddText({ center - (hpWidth / 2.f), ypercent2 }, IM_COL32(255, 255, 255, 255), hpText.c_str());
 
     /* Debug Example - Retrieves stat references from D2Enums.h, Remove the // at start of line to use */
-    //std::string playerStrength = std::format("Player Strength: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_ITEM_MAGICARROW, 0));
-    //drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), playerStrength.c_str());
+    //std::string coldimmunity3 = std::format("Undead Atk Rating: {}", STATLIST_GetUnitStatSigned(pUnitPlayer, STAT_ITEM_UNDEAD_TOHIT, 0));
+    //drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), coldimmunity3.c_str());
 }
 
 //Check Hotkeys and execute functions
@@ -134,9 +166,12 @@ bool D2RHUD::OnKeyPressed(short key)
     return false;
 }
 
+
+
 //Show D2RHUD Version Info as a MessageBox Popup
 void D2RHUD::ShowVersionMessage()
 {
     std::string message = "Version: " + std::string(Version);
     MessageBoxA(nullptr, message.c_str(), "Debug Display", MB_OK | MB_ICONINFORMATION);
 }
+
