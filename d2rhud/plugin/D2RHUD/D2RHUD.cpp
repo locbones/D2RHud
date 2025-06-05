@@ -188,17 +188,12 @@ bool D2RHUD::OnKeyPressed(short key)
     // Check for reload: Ctrl + R
     if ((GetAsyncKeyState(VK_CONTROL) & 0x8000) &&
         (key == 'R')) {
-        D2GameStrc* pGame = *gCurrentSinglePlayerGame;
+        DATATBLS_UnloadAllBins();
+        DATATBLS_LoadAllTxts();
 
-        if (!pGame)
-        {
-            DATATBLS_UnloadAllBins();
-            DATATBLS_LoadAllTxts();
-
-            g_ItemFilterStatusMessage = ".TXT Files have been reloaded!";
-            g_ShouldShowItemFilterMessage = true;
-            g_ItemFilterMessageStartTime = std::chrono::steady_clock::now();
-        }
+        g_ItemFilterStatusMessage = ".TXT Files have been reloaded!";
+        g_ShouldShowItemFilterMessage = true;
+        g_ItemFilterMessageStartTime = std::chrono::steady_clock::now();
 
         return true;
     }
