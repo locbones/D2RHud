@@ -7,8 +7,9 @@
 #include <functional>
 #include "../KeyMappings.h"
 #include <string>
+#include <chrono>
 
-const char* Version = "1.0.3";
+const char* Version = "1.0.4";
 const char* ResistanceNames[6] = { "   ", "   ", "   ", "   ", "   ", "   " };
 constexpr  uint32_t ResistanceStats[6] = { 39, 41, 43, 45, 36, 37 };
 constexpr  uint32_t Alignment = { 172 };
@@ -55,6 +56,9 @@ int parseMonsterStats(const std::string& filename) {
 }
 
 int displayEnabled = parseMonsterStats("D2RHUD_Config.txt");
+std::string g_ItemFilterStatusMessage;
+bool g_ShouldShowItemFilterMessage;
+std::chrono::steady_clock::time_point g_ItemFilterMessageStartTime;
 
 //Draw monster stats based on resolution and hover settings
 void D2RHUD::OnDraw() {
@@ -70,6 +74,29 @@ void D2RHUD::OnDraw() {
     float ypercent2 = io.DisplaySize.y * 0.043f;
     int fontIndex = (io.DisplaySize.y <= 720) ? 0 : (io.DisplaySize.y <= 900) ? 1 : (io.DisplaySize.y <= 1080) ? 2 : (io.DisplaySize.y <= 1440) ? 3 : 4;
     ImGui::PushFont(io.Fonts->Fonts[fontIndex]);
+
+    // Show reload message if triggered
+    if (g_ShouldShowItemFilterMessage) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - g_ItemFilterMessageStartTime);
+
+        if (elapsed.count() < 3) // show for 3 seconds
+        {
+            ImFont* largeFont = io.Fonts->Fonts[4];
+            if (largeFont) ImGui::PushFont(largeFont);
+
+            ImVec2 screenSize = io.DisplaySize;
+            ImVec2 textSize = ImGui::CalcTextSize(g_ItemFilterStatusMessage.c_str());
+            ImVec2 textPos = ImVec2((screenSize.x - textSize.x) * 0.5f, (screenSize.y - textSize.y) * 0.1f);
+
+            drawList->AddText(textPos, IM_COL32(199, 179, 119, 255), g_ItemFilterStatusMessage.c_str());
+
+            if (largeFont) ImGui::PopFont();
+        }
+        else {
+            g_ShouldShowItemFilterMessage = false;
+        }
+    }
 
     // Ensure hover conditions are met and display is enabled
     if (!gMouseHover->IsHovered || gMouseHover->HoveredUnitType > 0x1 || displayEnabled == 0) {
@@ -117,18 +144,18 @@ void D2RHUD::OnDraw() {
     //drawList->AddText({ 20, 10 }, IM_COL32(170, 50, 50, 255), coldimmunity3.c_str());
 }
 
+
+
 //Check Hotkeys and execute functions
 bool D2RHUD::OnKeyPressed(short key)
 {
     std::string filename = "D2RHUD_Config.txt";
 
-    // Structure for string and keymap definitions
     struct KeyAction {
         std::string searchString;
         std::function<void()> action;
     };
 
-    // Structure for keymap to function definitions
     std::vector<KeyAction> actions = {
         {"Transmute: ", [] { D2CLIENT_Transmute(); }},
         {"Sort Stash: ", [] { INVENTORY_AutoSort(1, INVPAGE_STASH); }},
@@ -136,7 +163,6 @@ bool D2RHUD::OnKeyPressed(short key)
         {"Sort Cube: ", [] { INVENTORY_AutoSort(1, INVPAGE_CUBE); }}
     };
 
-    // Parse config entries to find matching keymap for each function (KeyMappings.cpp)
     for (const auto& action : actions) {
         std::string result = readTextFollowingString(filename, action.searchString);
         if (!result.empty()) {
@@ -151,20 +177,35 @@ bool D2RHUD::OnKeyPressed(short key)
         }
     }
 
-    // Track key presses for the version display
-    if (key == VK_CONTROL) ctrlPressed = true;
-    if (key == VK_MENU) altPressed = true;
-    if (key == 'V') vPressed = true;
-
-    // If CTRL + ALT + V are pressed together, show the message box
-    if (ctrlPressed && altPressed && vPressed) {
+    // Check for version display: Ctrl + Alt + V
+    if ((GetAsyncKeyState(VK_CONTROL) & 0x8000) &&
+        (GetAsyncKeyState(VK_MENU) & 0x8000) &&
+        (key == 'V')) {
         ShowVersionMessage();
-        ctrlPressed = altPressed = vPressed = false; // Reset state
+        return true;
+    }
+
+    // Check for reload: Ctrl + R
+    if ((GetAsyncKeyState(VK_CONTROL) & 0x8000) &&
+        (key == 'R')) {
+        D2GameStrc* pGame = *gCurrentSinglePlayerGame;
+
+        if (!pGame)
+        {
+            DATATBLS_UnloadAllBins();
+            DATATBLS_LoadAllTxts();
+
+            g_ItemFilterStatusMessage = ".TXT Files have been reloaded!";
+            g_ShouldShowItemFilterMessage = true;
+            g_ItemFilterMessageStartTime = std::chrono::steady_clock::now();
+        }
+
         return true;
     }
 
     return false;
 }
+
 
 
 

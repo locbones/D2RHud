@@ -1,6 +1,7 @@
 #pragma once
 #include "../Plugin.h"
 #include <string>
+#include <chrono>
 
 class D2RHUD : public Plugin {
 public:
@@ -12,5 +13,6 @@ private:
 	bool ctrlPressed = false;
 	bool altPressed = false;
 	bool vPressed = false;
+	bool rPressed = false;
 };
 

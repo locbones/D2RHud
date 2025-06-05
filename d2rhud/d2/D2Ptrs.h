@@ -15,9 +15,12 @@ FUNC_DEF(__int64, __fastcall, INVENTORY_AutoSort, (uint32_t pUnitID, D2C_ItemInv
 FUNC_DEF(void, __fastcall, D2CLIENT_Transmute, ());
 FUNC_DEF(void, __fastcall, D2CLIENT_SaveCharacter, ());
 FUNC_DEF(void, __fastcall, CLIENT_RevealAutoMapRoom, ());
+FUNC_DEF(void, __fastcall, DATATBLS_LoadAllTxts, ());
+FUNC_DEF(void, __fastcall, DATATBLS_UnloadAllBins, ());
 
 VAR_DEF(D2MouseHoverStruct, gMouseHover);
 VAR_DEF(D2GameStrc*, gCurrentSinglePlayerGame);
+
 
 namespace D2Ptrs {
     // All verified and working on
@@ -37,5 +40,9 @@ namespace D2Ptrs {
         VAR_PATTERNREF(gMouseHover, NULL, "48 8D 3D ? ? ? ? BB ? ? ? ? 48 8B CF E8 ? ? ? ? 48 83 C7 10 ", 3);
         VAR_PATTERNREF(gCurrentSinglePlayerGame, NULL, "48 89 05 ? ? ? ? 48 85 C0 0F 84 ? ? ? ? 44 8B C7 ", 3);
         FUNC_PATTERNREF(D2CLIENT_SaveCharacter, NULL, "e8 13 19 1b 01", 1);
+
+        uintptr_t base = (uintptr_t)GetModuleHandle(NULL);
+        DATATBLS_LoadAllTxts = reinterpret_cast<decltype(DATATBLS_LoadAllTxts)>(base + 0x305D30);
+        DATATBLS_UnloadAllBins = reinterpret_cast<decltype(DATATBLS_UnloadAllBins)>(base + 0x304ba0);
     }
 };
